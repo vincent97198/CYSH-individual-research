@@ -2,7 +2,7 @@
 #include<bits/stdc++.h>			
 
 #define ll long long
-#define MAXN 20
+#define MAXN 50
 
 using namespace std;
 //預設定end
