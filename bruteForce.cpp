@@ -8,7 +8,8 @@ using namespace std;
 //預設定end
 
 struct edge{
-	ll to,cost;	//目的地，路程花費
+	int to;		//目的地
+	ll cost;	//路程花費
 };
 
 //宣告變數
