@@ -106,10 +106,14 @@ void output()
 
 int main()
 {
+	FILE *fPtr=freopen("input_RAW.txt","r",stdin);
+
 	input();
 	init();
 	solve();
 	output();
+
+	fclose(fPtr);
 
 	return 0;
 }
