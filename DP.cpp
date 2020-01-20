@@ -1,119 +1,76 @@
 #include <bits/stdc++.h>
 #define N 22
-#define ll unsigned long long
+#define ll long long
 
 using namespace std;
 
-struct edge
-{
-	int to;
-	ll cost;
-
-	bool operator<(const edge &a)const{
-		return cost>a.cost;
-	}
-};
-
-int n,ROUTE[N][ ( (ll)1<<N ) ],start;
-ll dp[N][ ( (ll)1<<N ) ],d[N],Path;
-priority_queue<edge> q;
-vector<edge> G[N];
+int n;
+vector<int> G[N];
+int dp[N][(ll)1<<N],NEXTPOS[N];
 
 void init()
 {
-	memset(dp,0x3f,sizeof(dp));
+	for(int i=0;i<n;++i){
+		G[i].clear();
+		NEXTPOS[i]=i;
+	}
+    memset(dp,0x3f,sizeof(dp));
 
-	for(int i=1;i<=n;++i)
-		dp[i][0]=0;
-	Path=(ll)1<<n;
+    dp[0][1]=0;
 }
 
 void input()
 {
-	cin >> n;
-	edge temporary;
-	for(int i=1;i<=n;++i){
-		for(int j=1;j<=n;++j){
-			temporary.to=j;
-			cin >> temporary.cost;
-			G[i].push_back(temporary);
-		}
-	}
+    int temporaryCOST;
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j){
+            cin >> temporaryCOST;
+            G[i].push_back(temporaryCOST);
+        }
+    }
 }
 
 void solve()
 {
-	for (int i=1;i<( (ll)1<<n );++i){
-		if (i==(i & Path)){
-			memset(d,0x3f,sizeof(d));
-
-			for (int j=1;j<=n;++j){
-
-				if (!( ( 1 << (j-1) ) & i ))
-					continue;
-				d[j] = dp[j][i ^ ( 1 << (j-1) )];
-				edge temporary;	temporary.cost = d[j];	temporary.to = j;
-				q.push(temporary);
-			}
-
-			while (!q.empty()) {					//求從i走到任意點的最短距離
-				edge now = q.top();	q.pop();
-
-				for (edge E:G[now.to]) {
-					if (( ( 1 << (E.to-1) ) & i ))		//要走到的點不能是i裡的
-						continue;
-
-					if (d[now.to]+E.cost<d[E.to]) {
-						d[E.to]=d[now.to]+E.cost;
-						ROUTE[E.to][i]=now.to;		//紀錄路徑
-						edge temporary;	temporary.cost = d[E.to];	temporary.to = E.to;
-						q.push(temporary);
-					}
-				}
-			}
-			for (int j=1; j<=n;j++)
-				if (!( ( 1 << (j-1) ) & i ))		//要走到的點不能是i裡的
-					dp[j][i] = d[j];
-		}
-	}
-
-	ll MAX=(ll)1<<63;
-	for(int i=1;i<=n;++i){
-		if(dp[i][Path ^ ( 1 << (i-1) )]>MAX){
-			MAX=dp[i][Path ^ ( 1 << (i-1) )];
-			start=i;
-		}
-	}
-
+    for(ll path=1;path<((ll)1<<(n));++path){
+        for(int next=1;next<n;++next){
+            if( ((ll)1<<next)&path )    continue;
+                for(int FROM=0;FROM<n;++FROM) {
+                    if ( ((ll) 1 << FROM) & path && (dp[next][path + ((ll) 1 << next)]>( dp[FROM][path] + G[FROM][next])) ) {
+                        NEXTPOS[FROM]=next;
+                        dp[next][path + ((ll) 1 << next)]= dp[FROM][path] + G[FROM][next];
+                    }
+                }
+        }
+    }
 }
 
 void output()
 {
-	cout << "Minimum travel distance: " << dp[start][Path ^ ( 1 << (start-1) )]
-		<< endl << "Travel route: ";
+    int ans=1e9;
+    for(int FROM=0;FROM<n;++FROM)
+        ans=min(dp[FROM][((ll)1<<(n))-1]+G[FROM][0],ans);
+    cout << "Minimun travel distance:  " << ans << endl << "Travel route: ";
 
-	int now = start;
-
-	while (true) {
-		cout << now << " ";
-		if (Path & ( 1 << (now-1) ))			//通一個點可走多次
-			Path ^= ( 1 << (now-1) );
-		if (!Path)	break;
-		now = ROUTE[now][Path];
-	}
-	cout << endl;
+    for(int now=0,t=0;t<n;++t,now=NEXTPOS[now]){
+        cout << now+1 << "->";
+    }
+    cout << 1 << endl;
 }
 
 int main()
 {
-	FILE *fPtr=freopen("input_RAW.txt","r",stdin);
+    FILE *fPtr=freopen("input_RAW.txt","r",stdin);
 
-	input();
-	init();
-	solve();
-	output();
+	while(cin >> n){
+   		init();
+   	    input();
+   		solve();
+		output();
+	}
 
-	fclose(fPtr);
+    fclose(fPtr);
 
-	return 0;
+    return 0;
 }
+
