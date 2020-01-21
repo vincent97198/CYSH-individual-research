@@ -36,6 +36,8 @@ void solve()
         for(int next=1;next<n;++next){			//窮舉下一個要走的點
             if( ((ll)1<<next)&path )    continue;	//確定next不是走過的點
                 for(int FROM=0;FROM<n;++FROM) {	//窮舉經歷過的點裡，是由那一個連向next
+					if(G[FROM][next]==0)	//若連線不存在，則跳過
+						continue;
                     if ( ((ll) 1 << FROM) & path && (dp[next][path + ((ll) 1 << next)]>( dp[FROM][path] + G[FROM][next])) ) {	//確定FROM真的走過（在path裡），且若由FROM連到next形成的路徑圖會是比之前的好，就更新 最小權重和 與 連線方式(NESTPOS[])
                         NEXTPOS[FROM]=next;	//紀錄FROM連向next會是更佳的連線方式
                         dp[next][path + ((ll) 1 << next)]= dp[FROM][path] + G[FROM][next];	//紀錄下此連線方式的權重和

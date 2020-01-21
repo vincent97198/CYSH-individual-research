@@ -39,8 +39,10 @@ void dfs(int now,ll COST,int node,int start)	//遞迴路徑的函數，有分個
 	}
 
 	int next;	//存放下一個節點
-	for(int i=0;i<E[now].size();++i){	//窮舉與now相連的邊
+	for(int i=0;i<n;++i){	//窮舉下一個點
 		next=i+1;
+		if(E[now][next]==0)	//若連線邊不存在
+			continue;
 		if(!visit[next]){	//確定是沒走過的點
 			temporaryRoute[node-1]=next;	//紀錄遞迴路徑
 			visit[next]=true;	//標記next已經走到了
@@ -56,10 +58,8 @@ void init()
 	route.clear();
 	temporaryRoute.clear();
 	memset(visit,0,sizeof(visit));
-	for(int i=1;i<=n;++i){
+	for(int i=1;i<=n;++i)
 		E[i].clear();
-
-	}
 }
 
 void input()	//輸入資料
