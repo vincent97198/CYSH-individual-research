@@ -16,10 +16,12 @@ vector<int> E[MAXN];	//存邊 index代表起始位置
 
 void dfs(int now,ll COST,int node,int start)	//遞迴路徑的函數，有分個變數分別代表 現在位置,當前花費,剩下幾個節點沒走過,起點
 {
+	if(COST>ans)	//若當前結果已大於之前求得的最小值則該路徑不可能是最佳路徑，所以跳出此路徑
+		return;
 	if(node==0){	//走過每個城市一次
 		bool flag=false;
-		for(int i=0;i<E[now].size();++i){	//判斷最後能不能走回起點
-			if(i+1==start){
+		for(int i=0;i<n;++i){	//判斷最後能不能走回起點
+			if(E[now][i]!=0){
 				flag=true;
 				COST+=E[now][i];
 				break;
@@ -41,7 +43,7 @@ void dfs(int now,ll COST,int node,int start)	//遞迴路徑的函數，有分個
 	int next;	//存放下一個節點
 	for(int i=0;i<n;++i){	//窮舉下一個點
 		next=i+1;
-		if(E[now][next]==0)	//若連線邊不存在
+		if(E[now][i]==0)	//若連線邊不存在
 			continue;
 		if(!visit[next]){	//確定是沒走過的點
 			temporaryRoute[node-1]=next;	//紀錄遞迴路徑
