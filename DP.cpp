@@ -50,7 +50,7 @@ void output()
     int ans=1e9;
     for(int FROM=0;FROM<n;++FROM)	//窮舉由那一個點連回起始點會有最佳結果
         ans=min(dp[FROM][((ll)1<<(n))-1]+G[FROM][0],ans);	
-    cout << "Minimun travel distance:  " << ans << endl << "Travel route: ";	//輸出值
+    cout << "cost: " << ans << endl << "Travel route: ";	//輸出值
 
     for(int now=0,t=0;t<n;++t,now=NEXTPOS[now]){	//輸出路徑結果
         cout << now+1 << "->";
