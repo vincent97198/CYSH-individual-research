@@ -11,7 +11,7 @@ using namespace std;
 
 
 //宣告變數
-int n,t,num;
+int n,t,num,tmp;
 
 void solve()
 {
@@ -19,15 +19,18 @@ void solve()
 	random_device rd;
     auto tt = chrono::high_resolution_clock::now();
     std::mt19937_64 gen = std::mt19937_64(tt.time_since_epoch().count());
-    std::uniform_int_distribution<> dis(0 , 10000);
+    std::uniform_int_distribution<> dis(-1000 , 10000);	// 約1/11的機率沒有邊
     auto randfunction = bind(dis , gen);
 	//設定隨機數生成器end
 
-	num=(randfunction()%(n-1))+2;	//隨機一個城市數
+	num=(abs(randfunction())%(n-1))+2;	//隨機一個城市數
 	cout << num << endl;		//輸出程式數
 	for(int i=1;i<=num;++i){		//輸出num*num個隨機數
 		for(int j=1;j<=num;++j){
-			cout << randfunction() << " ";
+			tmp=randfunction();
+			if(tmp<=0)	//若權重不大於0就當沒有那條邊
+				tmp=0;
+			cout << tmp << " ";
 		}
 		cout << endl;
 	}
@@ -50,42 +53,44 @@ int main()
 	FILE *BruteForce=popen("./BruteForce","r");
 	
 	char trash;
-	int BruteForce_Ans[1000000];
+	int BruteForce_Ans[100000];
 
 	for(int i=0;i<t;++i){
-		fscanf(BruteForce,"cost: %d", &BruteForce_Ans[i]);
+		fscanf(BruteForce,"ost: %d", &BruteForce_Ans[i]);
 		do{
 			trash=fgetc(BruteForce);
-		}while(trash!=' ');
+		}while(trash!='c');
 	}
 
 	pclose(BruteForce);
 	
 	FILE *DP=popen("./DP","r");
 	
-	int DP_Ans[1000000];
+	int DP_Ans[100000];
 
 	for(int i=0;i<t;++i){
-		fscanf(BruteForce,"cost: %d", &DP_Ans[i]);
+		fscanf(DP,"ost: %d", &DP_Ans[i]);
 		do{
 			trash=fgetc(DP);
-		}while(trash!=' ');
+		}while(trash!='c');
 	}
 	
 	fclose(DP);
 	
 	freopen("result.txt","w",stdout);
 	bool flag=true;
+	int wrongLine;
 	for(int i=0;i<t;++i){
 		if(DP_Ans[i]!=BruteForce_Ans[i]){
 			flag=false;
+			wrongLine=i;
 			break;
 		}
 	}
 	if(flag)
 		cout << "Correct" << endl;
 	else
-		cout << "Wrong" << endl;
+		cout << "Wrong" << endl << "wrong line: " << wrongLine <<  endl;
 
     return 0;
 }
