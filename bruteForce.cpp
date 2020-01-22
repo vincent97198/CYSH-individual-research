@@ -18,18 +18,12 @@ void dfs(int now,ll COST,int node,int start)	//遞迴路徑的函數，有分個
 {
 	if(COST>ans)	//若當前結果已大於之前求得的最小值則該路徑不可能是最佳路徑，所以跳出此路徑
 		return;
-	if(node==0){	//走過每個城市一次
-		bool flag=false;
-		for(int i=0;i<n;++i){	//判斷最後能不能走回起點
-			if(E[now][i]!=0){
-				flag=true;
-				COST+=E[now][i];
-				break;
-			}
-		}
+	if(node==0){	//若已走過每個城市一次，執行以下
 
-		if(!flag)	//找不到回起點的路，所以重新找路
-			return;	//跳出該層遞迴
+		if(E[now][start-1]!=0)	//判斷最後能不能走回起點
+			COST+=E[now][start-1];
+		else
+			return;	//找不到回起點的路，所以重新找路，跳出該層遞迴
 
 		if(COST<ans){	//找到路徑，比較當前路徑的花費與當前找到的最小值
 			ans=COST;
@@ -59,7 +53,6 @@ void init()
 	ans=(ll)1<<61;
 	route.clear();
 	temporaryRoute.clear();
-	memset(visit,0,sizeof(visit));
 	for(int i=1;i<=n;++i)
 		E[i].clear();
 }
@@ -77,24 +70,28 @@ void input()	//輸入資料
 
 void solve()	//calculate the answer
 {
-	memset(visit,0,sizeof(visit));	//初始化visit，使visit全部為false
-	int start=1;
-	temporaryRoute[n-1]=start;	//紀錄起點
-	visit[start]=true;	//標記起點已走過
-	dfs(start,0,n-1,start);	//計算以start為起點的最短迴路
+	for(int start=1;start<=n;++start){
+		temporaryRoute[n-1]=start;	//紀錄起點
+		visit[start]=true;	//標記起點已走過
+		dfs(start,0,n-1,start);	//計算以start為起點的最短迴路
+		visit[start]=false;
+	}
+	if(ans!=((ll)1<<61)){		//判斷路徑是否存在
+		cout << "cost: " << ans << endl;	//輸出答案
+		cout << "route: ";
+		for(int i=n-1;i>=0;--i)	//輸出最佳解路徑（若有多條僅輸出其中一條）
+			cout << route[i] << "->";
+		cout << route[n-1] << endl;
+	}
+	else
+		cout << "cost: 0\nroute doesn't exist" << endl;
 
-	cout << "cost: " << ans << endl;	//輸出答案
-
-	cout << "route: ";
-	for(int i=n-1;i>=0;--i)	//輸出最佳解路徑（若有多條僅輸出其中一條）
-		cout << route[i] << "->";
-	cout << route[n-1] << endl;
 }
 
 int main()
 {
 	FILE *fPtr=freopen("input_RAW.txt","r",stdin);	//開啟要讀取的檔案
-	
+
 	while(cin >> n){//輸入n
 		init();		//初始化
 		input();	//input data
@@ -103,6 +100,6 @@ int main()
 
 	fclose(fPtr);	//關閉讀取的檔案
 
-    return 0;
+	return 0;
 }
 
