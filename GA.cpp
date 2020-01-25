@@ -11,12 +11,13 @@ std::uniform_int_distribution<> dis(0 , N);
 auto randGenerator_shuffle = bind(dis , gen);
 //設定隨機數生成器end
 
-int n,population;
-const int populationMax=1000,populationMin=10;
-const double crossOverRate=0.9,mutationRate=0.1,filter=0.95;
+int n;
+const int population=100,populationMin=10;
+const double crossOverRate=0.7,mutationRate=0.1,generationMax=1000;
 
-vector<int> TSP_order[populationMax];
-ll G[N];
+vector<int> TSP_order[population][2];	//一個存父代，一個存子代
+vector<ll> G[N];
+ll TSPdistance[population];
 
 auto randShuffle(int x)
 {
@@ -26,7 +27,7 @@ auto randShuffle(int x)
 void init()
 {
 	cin >> n;
-	population=populationMax;
+	memset(TSPdistance,0,sizeof(TSPdistance));
 /*
 	int tmp;
 	for(int i=0;i<n;++i){
@@ -45,9 +46,13 @@ void randomlyGenerated()
 {
 	for(int i=0;i<population;++i){
 		for(int j=0;j<n;++j)
-			TSP_order[i].push_back(j);
+			TSP_order[i][0].push_back(j);
 		
-		random_shuffle(TSP_order[i].begin(),TSP_order[i].end(),randShuffle);
+		random_shuffle(TSP_order[i][0].begin(),TSP_order[i][0].end(),randShuffle);
+`
+		for(int j=1;j<n;++j)
+			TSPdistance[i]+=G[TSP_order[i][j-1]][TSP_order[i][j]];
+		TSPdistance[i]+=G[TSP_order[i][n-1]][TSP_order[i][0]];
 	}
 /*TEST
 	for(int i=0;i<10;++i){
@@ -64,9 +69,10 @@ int main()
 	init();
 	randomlyGenerated();
 	
-	while(population>populationMin){
-		
-		population*=filter;
+	int parent=0;
+	queue<int> q;
+	for(int genertaion=0;genertaion<generationMax;++generation){
+		while()
 	}
 
 	return 0;
