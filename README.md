@@ -1,3 +1,3 @@
 # Indiviual-research
 
-int edge to double edge
+next step int edge to double edge
