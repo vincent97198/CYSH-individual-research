@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #define ll long long
-#define N 100
+#define N 100000
 
 using namespace std;
 
@@ -13,8 +13,8 @@ auto randGenerator = bind(dis , gen);
 //設定隨機數生成器end
 
 int n;
-const int population=5;
-const double crossOverRate=0.9,mutationRate=0.1,generationMax=1000;
+const int population=250;
+const double crossOverRate=0.85,mutationRate=0.08,generationMax=7000;
 
 vector< vector<int> > TSP_order;
 vector<ll> G[N];
@@ -35,10 +35,12 @@ bool cmp(int a,int b)
 
 void init()
 {
-	cin >> n;
+	TSP_order.clear();
+	TSPdistance.clear();
 
 	int tmp;
 	for(int i=0;i<n;++i){
+		G[i].clear();
 		for(int j=0;j<n;++j){
 			cin >> tmp;
 			if(tmp!=0)
@@ -85,9 +87,9 @@ void mutation(int num)
 {
 	vector<int> tmp;
 
-	int a=randShuffle(N+1),b=randShuffle(N+1);
+	int a=randShuffle(n),b=randShuffle(n);
 	while(b==a){
-		b=randShuffle(N+1);
+		b=randShuffle(n);
 	}
 
 	for(int i=0;i<n;++i){
@@ -103,56 +105,64 @@ void mutation(int num)
 
 int main()
 {
-	init();
-	randomlyGenerated();
-	
-	double distanceSum[population];
-	for(int generation=0;generation<generationMax;++generation){
-		memset(distanceSum,0,sizeof(distanceSum));
-		for(int i=1;i<population;++i)
-			distanceSum[i]=TSPdistance[i-1]+distanceSum[i-1];
-		for(int i=0;i<population;++i)
-			distanceSum[i]/=distanceSum[population-1];
+	freopen("input_RAW.txt","r",stdin);
+	while(cin >> n){
+		init();
+		randomlyGenerated();
 
-		for(int i=0;i<population;++i){
-			if(randGenerator()<=crossOverRate){
-				TSP_order.push_back(TSP_order[i]);
-				double Probability=randGenerator();
-				int pos=distance(distanceSum,lower_bound(distanceSum,distanceSum+population,Probability));
-				crossOver(TSP_order.size()-1,pos);
+		double distanceSum[population];
+		for(int generation=0;generation<generationMax;++generation){
+			memset(distanceSum,0,sizeof(distanceSum));
+			for(int i=1;i<population;++i)
+				distanceSum[i]=TSPdistance[i-1]+distanceSum[i-1];
+			for(int i=0;i<population;++i)
+				distanceSum[i]/=distanceSum[population-1];
+
+			for(int i=0;i<population;++i){
+				if(randGenerator()<=crossOverRate){
+					TSP_order.push_back(TSP_order[i]);
+					double Probability=randGenerator();
+					int pos=distance(distanceSum,lower_bound(distanceSum,distanceSum+population,Probability));
+					crossOver(TSP_order.size()-1,pos);
+				}
+			}
+
+			for(int i=0;i<population;++i)
+				if(randGenerator()<=mutationRate)
+					mutation(i);
+
+			for(int i=population;i<TSP_order.size();++i){
+				ll tmpDistance=G[TSP_order[i][n-1]][TSP_order[i][0]];
+				for(int j=1;j<TSP_order[i].size();++j)
+					tmpDistance+=G[TSP_order[i][j-1]][TSP_order[i][j]];
+				TSPdistance.push_back(tmpDistance);
+			}
+
+			vector<int> index;
+			for(int i=0;i<TSP_order.size();++i)
+				index.push_back(i);
+
+			sort(index.begin(),index.end(),cmp);
+			index.erase(index.begin(),index.begin()+population);
+			sort(index.begin(),index.end());
+
+			for(int i=0;i<index.size();++i){
+				TSP_order.erase(TSP_order.begin()+index[i]-i);
+				TSPdistance.erase(TSPdistance.begin()+index[i]-i);
 			}
 		}
-		
-		for(int i=0;i<population;++i)
-			if(randGenerator()<=mutationRate)
-				mutation(i);
 
-		for(int i=population;i<TSP_order.size();++i){
-			ll tmpDistance=G[TSP_order[i][n-1]][TSP_order[i][0]];
-			for(int j=1;j<TSP_order[i].size();++j)
-				tmpDistance+=G[TSP_order[i][j-1]][TSP_order[i][j]];
-			TSPdistance.push_back(tmpDistance);
+		ll min0=1e18,num;
+		for(int i=0;i<population;++i){
+			if(min0>TSPdistance[i]){
+				min0=TSPdistance[i];
+				num=i;
+			}
 		}
-
-		vector<int> index;
-		for(int i=0;i<TSP_order.size();++i)
-			index.push_back(i);
-
-		sort(index.begin(),index.end(),cmp);
-
-		for(int i=population;i<index.size();++i){
-			TSP_order.erase(TSP_order.begin()+index[i]);
-			TSPdistance.erase(TSPdistance.begin()+index[i]);
-		}
-	/*		
-		for(int i=population;i<TSP_order.size();++i){
-			cout << "number:" << i << endl;
-			for(int j=0;j<n;++j)	
-				cout << TSP_order[i][j] << " ";
-			cout << endl;
-		}	
-	*/
+		cout << "cost: " << min0 << endl << "Travel route: ";
+		for(int i=0;i<n;++i)
+			cout << TSP_order[num][i]+1 << "->";
+		cout << TSP_order[num][0]+1 << endl;
 	}
-
 	return 0;
 }

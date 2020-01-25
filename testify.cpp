@@ -50,6 +50,7 @@ int main()
 		solve();	//output data
 	fclose(fPtr);	//關閉測資檔案
 	//生成測資end
+	/*
 	FILE *BruteForce=popen("./BruteForce","r");
 	
 	char trash;
@@ -91,7 +92,7 @@ int main()
 		cout << "Correct" << endl;
 	else
 		cout << "Wrong" << endl << "wrong line: " << wrongLine <<  endl;
-
+*/
     return 0;
 }
 
