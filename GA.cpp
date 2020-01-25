@@ -11,11 +11,12 @@ std::uniform_int_distribution<> dis(0 , N);
 auto randGenerator_shuffle = bind(dis , gen);
 //設定隨機數生成器end
 
-int n;
-const int populationSize=1000,populationMin=10;
+int n,population;
+const int populationMax=1000,populationMin=10;
 const double crossOverRate=0.9,mutationRate=0.1,filter=0.95;
 
-vector<int> TSP_order[populationSize],G[N];
+vector<int> TSP_order[populationMax];
+ll G[N];
 
 auto randShuffle(int x)
 {
@@ -25,12 +26,16 @@ auto randShuffle(int x)
 void init()
 {
 	cin >> n;
+	population=populationMax;
 /*
 	int tmp;
 	for(int i=0;i<n;++i){
 		for(int j=0;j<n;++j){
 			cin >> tmp;
-			G[i].push_back(tmp);
+			if(tmp!=0)
+				G[i].push_back(tmp);
+			else
+				G[i].push_back(1e17);
 		}
 	}
 */			
@@ -38,10 +43,10 @@ void init()
 
 void randomlyGenerated()
 {
-	for(int i=0;i<populationSize;++i){
-		for(int j=0;j<n;++j){
+	for(int i=0;i<population;++i){
+		for(int j=0;j<n;++j)
 			TSP_order[i].push_back(j);
-		}
+		
 		random_shuffle(TSP_order[i].begin(),TSP_order[i].end(),randShuffle);
 	}
 /*TEST
@@ -52,13 +57,17 @@ void randomlyGenerated()
 		cout << endl;
 	}
 */
-}
+} 
 
 int main()
 {
 	init();
 	randomlyGenerated();
 	
+	while(population>populationMin){
+		
+		population*=filter;
+	}
 
 	return 0;
 }
