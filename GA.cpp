@@ -13,8 +13,8 @@ auto randGenerator = bind(dis , gen);
 //設定隨機數生成器end
 
 int n;
-const int population=250;
-const double crossOverRate=0.85,mutationRate=0.08,generationMax=7000;
+const int population=500;
+const double crossOverRate=0.9,mutationRate=0.1,generationMax=50000;
 
 vector< vector<int> > TSP_order;
 vector<ll> G[N];
