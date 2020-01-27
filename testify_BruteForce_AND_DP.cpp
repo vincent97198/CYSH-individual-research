@@ -52,27 +52,28 @@ int main()
 	//生成測資end
 	FILE *BruteForce=popen("./BruteForce","r");
 	
-	char trash;
+	char trash=fgetc(BruteForce);
 	int BruteForce_Ans[100000];
 
 	for(int i=0;i<t;++i){
 		fscanf(BruteForce,"ost: %d", &BruteForce_Ans[i]);
 		do{
 			trash=fgetc(BruteForce);
-		}while(trash!='c');
+		}while(trash!='c' && trash!=EOF);
 	}
 
 	pclose(BruteForce);
 	
 	FILE *DP=popen("./DP","r");
-	
+
+	trash=fgetc(DP);
 	int DP_Ans[100000];
 
 	for(int i=0;i<t;++i){
 		fscanf(DP,"ost: %d", &DP_Ans[i]);
 		do{
 			trash=fgetc(DP);
-		}while(trash!='c');
+		}while(trash!='c' && trash!=EOF);
 	}
 	
 	fclose(DP);

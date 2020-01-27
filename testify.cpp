@@ -50,49 +50,56 @@ int main()
 		solve();	//output data
 	fclose(fPtr);	//關閉測資檔案
 	//生成測資end
-	/*
-	FILE *BruteForce=popen("./BruteForce","r");
 	
-	char trash;
-	int BruteForce_Ans[100000];
+	FILE *GA=popen("./GA","r");
+	
+	char trash=fgetc(GA);
+	int GA_Ans[100000];
+//	double GA_Time[100000];
 
 	for(int i=0;i<t;++i){
-		fscanf(BruteForce,"ost: %d", &BruteForce_Ans[i]);
+		fscanf(GA,"ost: %d", &GA_Ans[i]);
+	//	fscanf(GA,"TIME: %lf",&GA_Time[i]);
 		do{
-			trash=fgetc(BruteForce);
-		}while(trash!='c');
+			trash=fgetc(GA);
+		}while(trash!='c' && trash!=EOF);
 	}
 
-	pclose(BruteForce);
+	pclose(GA);
 	
 	FILE *DP=popen("./DP","r");
 	
+	trash=fgetc(DP);
 	int DP_Ans[100000];
 
 	for(int i=0;i<t;++i){
 		fscanf(DP,"ost: %d", &DP_Ans[i]);
 		do{
 			trash=fgetc(DP);
-		}while(trash!='c');
+		}while(trash!='c' && trash!=EOF);
 	}
 	
 	fclose(DP);
 	
 	freopen("result.txt","w",stdout);
-	bool flag=true;
-	int wrongLine;
+
+	double deviation[100000],MAX0=0,MIN0=100000,sum=0;	//TIME_MAX0=0,TIME_MIN0=100000,TIME_sum=0;
+
 	for(int i=0;i<t;++i){
-		if(DP_Ans[i]!=BruteForce_Ans[i]){
-			flag=false;
-			wrongLine=i;
-			break;
-		}
+		deviation[i]=(GA_Ans[i]-DP_Ans[i])/(double)DP_Ans[i];
+		sum+=deviation[i];
+//		TIME_sum+=GA_Time[i];
+//		TIME_MAX0=max(TIME_MAX0,GA_Time[i]);
+//		TIME_MIN0=min(TIME_MIN0,GA_Time[i]);
+		MAX0=max(MAX0,deviation[i]);
+		MIN0=min(MIN0,deviation[i]);
 	}
-	if(flag)
-		cout << "Correct" << endl;
-	else
-		cout << "Wrong" << endl << "wrong line: " << wrongLine <<  endl;
-*/
+
+	cout << "Average deviation: " << sum/t << endl;
+//	cout << "Average Time: " << TIME_sum/t << endl;
+	cout << "MAX deviation:" << MAX0 << endl << "min deviation: " << MIN0 << endl;
+//	cout << "MAX TIME: " << TIME_MAX0 << endl << "min TIME: " << TIME_MIN0 << endl;
+
     return 0;
 }
 

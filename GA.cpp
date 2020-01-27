@@ -13,8 +13,8 @@ auto randGenerator = bind(dis , gen);
 //設定隨機數生成器end
 
 int n;
-const int population=500;
-const double crossOverRate=0.9,mutationRate=0.1,generationMax=50000;
+const int population=10000;
+const double crossOverRate=0.5,mutationRate=0.6,generationMax=50000;
 
 vector< vector<int> > TSP_order;
 vector<ll> G[N];
@@ -46,7 +46,7 @@ void init()
 			if(tmp!=0)
 				G[i].push_back(tmp);
 			else
-				G[i].push_back(1e12);
+				G[i].push_back(1e15);
 		}
 	}	
 }
@@ -71,16 +71,17 @@ void randomlyGenerated()
 void crossOver(int father,int mother)
 {
 	int crossPoint=randShuffle(n-1)+1;
-	vector<int> tmp1,tmp2;
+	vector<int> tmp;
 	set<int> needToRemove;
 	for(int i=crossPoint;i<n;++i)
 		needToRemove.insert(TSP_order[mother][i]);
 
-	for(int i=0;i<crossPoint;++i)
+	for(int i=0;i<n;++i)
 		if(needToRemove.find(TSP_order[father][i])==needToRemove.end())
-			tmp1.push_back(TSP_order[father][i]);
+			tmp.push_back(TSP_order[father][i]);
 	for(int i=crossPoint;i<n;++i)
-		tmp1.push_back(TSP_order[mother][i]);
+		tmp.push_back(TSP_order[mother][i]);
+	TSP_order.push_back(tmp);
 }
 
 void mutation(int num)
@@ -107,10 +108,13 @@ int main()
 {
 	freopen("input_RAW.txt","r",stdin);
 	while(cin >> n){
+		auto t1=clock();
+
 		init();
 		randomlyGenerated();
 
 		double distanceSum[population];
+		ll MIN0=1e18,t=0,num;
 		for(int generation=0;generation<generationMax;++generation){
 			memset(distanceSum,0,sizeof(distanceSum));
 			for(int i=1;i<population;++i)
@@ -120,10 +124,9 @@ int main()
 
 			for(int i=0;i<population;++i){
 				if(randGenerator()<=crossOverRate){
-					TSP_order.push_back(TSP_order[i]);
 					double Probability=randGenerator();
 					int pos=distance(distanceSum,lower_bound(distanceSum,distanceSum+population,Probability));
-					crossOver(TSP_order.size()-1,pos);
+					crossOver(i,pos);
 				}
 			}
 
@@ -150,19 +153,32 @@ int main()
 				TSP_order.erase(TSP_order.begin()+index[i]-i);
 				TSPdistance.erase(TSPdistance.begin()+index[i]-i);
 			}
-		}
 
-		ll min0=1e18,num;
-		for(int i=0;i<population;++i){
-			if(min0>TSPdistance[i]){
-				min0=TSPdistance[i];
-				num=i;
+			ll min0=1e18;
+			for(int i=0;i<population;++i){
+				if(min0>TSPdistance[i]){
+					min0=TSPdistance[i];
+					num=i;
+				}
 			}
+			if(min0==MIN0)
+				++t;
+			else{
+				MIN0=min0;
+				t=0;
+			}
+			if(t==50)
+				break;
 		}
-		cout << "cost: " << min0 << endl << "Travel route: ";
-		for(int i=0;i<n;++i)
-			cout << TSP_order[num][i]+1 << "->";
-		cout << TSP_order[num][0]+1 << endl;
+		auto t2=clock();
+		if(MIN0<=1e12)
+			cout << "cost: " << MIN0 << endl;
+		else
+			cout << "cost: 0\n";
+		cout << "TIME: " << (t2-t1)/(double)CLOCKS_PER_SEC << endl <<  "Travel route: ";
+			for(int i=0;i<n;++i)
+				cout << TSP_order[num][i]+1 << "->";
+			cout << TSP_order[num][0]+1 << endl;
 	}
 	return 0;
 }
