@@ -59,12 +59,8 @@ void output()
 		}
 	}
 
-	if(ans!=1000000000){
-		cout << "cost: " << ans << endl << "Travel route: ";	//輸出值
-		for(int now=bestStart,t=0;t<n;++t,now=NEXTPOS[now])	//輸出路徑結果
-			cout << now+1 << "->";
-		cout << bestStart+1 << endl;	//最後必連回起始點
-	}
+	if(ans!=1000000000)
+		cout << "cost: " << ans << endl;	//輸出值
 	else
 		cout << "cost: 0\nroute doesn't exist\n" << endl;
 

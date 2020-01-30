@@ -19,11 +19,11 @@ void solve()
 	random_device rd;
     auto tt = chrono::high_resolution_clock::now();
     std::mt19937_64 gen = std::mt19937_64(tt.time_since_epoch().count());
-    std::uniform_int_distribution<> dis(-10 , 100);	// 約1/11的機率沒有邊
+    std::uniform_int_distribution<> dis(-100 , 1000);	// 約1/11的機率沒有邊
     auto randfunction = bind(dis , gen);
 	//設定隨機數生成器end
-
-	num=(abs(randfunction())%(n-1))+2;	//隨機一個城市數
+num=n;
+	//num=(abs(randfunction())%(n-1))+2;	//隨機一個城市數
 	cout << num << endl;		//輸出程式數
 	for(int i=1;i<=num;++i){		//輸出num*num個隨機數
 		for(int j=1;j<=num;++j){
@@ -50,7 +50,7 @@ int main()
 		solve();	//output data
 	fclose(fPtr);	//關閉測資檔案
 	//生成測資end
-	
+/*	
 	FILE *GA=popen("./GA","r");
 	
 	char trash=fgetc(GA);
@@ -99,7 +99,7 @@ int main()
 //	cout << "Average Time: " << TIME_sum/t << endl;
 	cout << "MAX deviation:" << MAX0 << endl << "min deviation: " << MIN0 << endl;
 //	cout << "MAX TIME: " << TIME_MAX0 << endl << "min TIME: " << TIME_MIN0 << endl;
-
+*/
     return 0;
 }
 
