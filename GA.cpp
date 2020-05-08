@@ -14,11 +14,12 @@ auto randGenerator = bind(dis , gen);
 
 int n;
 const int population=10000;
-const double crossOverRate=0.5,mutationRate=0.6,generationMax=50000;
+const double crossOverRate=0.8,mutationRate=0.1,generationMax=50000;
 
 vector< vector<int> > TSP_order;
-vector<ll> G[N];
-vector<ll> TSPdistance;
+vector<long double> G[N];
+vector<long double> TSPdistance;
+long double TSPdistanceMAX=0;
 
 auto randShuffle(int x)
 {
@@ -43,10 +44,14 @@ void init()
 		G[i].clear();
 		for(int j=0;j<n;++j){
 			cin >> tmp;
-			if(tmp!=0)
+			if(tmp!=0){
 				G[i].push_back(tmp);
-			else
+				TSPdistanceMAX+=tmp;
+			}
+			else{
 				G[i].push_back(1e15);
+				TSPdistanceMAX+=1e15;
+			}
 		}
 	}	
 }
@@ -61,7 +66,7 @@ void randomlyGenerated()
 		TSP_order.push_back(ordinaryOrder);
 		random_shuffle(TSP_order[i].begin(),TSP_order[i].end(),randShuffle);
 
-		ll tmpDistance=G[TSP_order[i][n-1]][TSP_order[i][0]];
+		long double tmpDistance=G[TSP_order[i][n-1]][TSP_order[i][0]];
 		for(int j=1;j<n;++j)
 			tmpDistance+=G[TSP_order[i][j-1]][TSP_order[i][j]];
 		TSPdistance.push_back(tmpDistance);
@@ -113,18 +118,18 @@ int main()
 		init();
 		randomlyGenerated();
 
-		double distanceSum[population];
+		long double distanceSum[population];
 		ll MIN0=1e18,t=0,num;
 		for(int generation=0;generation<generationMax;++generation){
 			memset(distanceSum,0,sizeof(distanceSum));
 			for(int i=1;i<population;++i)
-				distanceSum[i]=TSPdistance[i-1]+distanceSum[i-1];
+				distanceSum[i]=TSPdistanceMAX-TSPdistance[i-1]+distanceSum[i-1];
 			for(int i=0;i<population;++i)
 				distanceSum[i]/=distanceSum[population-1];
 
 			for(int i=0;i<population;++i){
 				if(randGenerator()<=crossOverRate){
-					double Probability=randGenerator();
+					long double Probability=randGenerator();
 					int pos=distance(distanceSum,lower_bound(distanceSum,distanceSum+population,Probability));
 					crossOver(i,pos);
 				}
@@ -154,7 +159,7 @@ int main()
 				TSPdistance.erase(TSPdistance.begin()+index[i]-i);
 			}
 
-			ll min0=1e18;
+			long double min0=1e18;
 			for(int i=0;i<population;++i){
 				if(min0>TSPdistance[i]){
 					min0=TSPdistance[i];
