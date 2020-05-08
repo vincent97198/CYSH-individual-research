@@ -14,7 +14,7 @@ auto randGenerator = bind(dis , gen);
 
 int n;
 const int population=10000;
-const double crossOverRate=0.8,mutationRate=0.1,generationMax=50000;
+const long double crossOverRate=0.75,mutationRate=0.07,generationMax=50000;
 
 vector< vector<int> > TSP_order;
 vector<long double> G[N];
