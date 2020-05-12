@@ -14,7 +14,7 @@ auto randGenerator = bind(dis , gen);
 
 int n;
 const int population=10000;
-const long double crossOverRate=0.8,mutationRate=0.01,generationMax=50000;
+const long double crossOverRate=0.8,mutationRate=0.01,generationMax=10000;
 
 vector< vector<int> > TSP_order;
 vector<long double> G[N];
@@ -44,14 +44,8 @@ void init()
         G[i].clear();
         for(int j=0;j<n;++j){
             cin >> tmp;
-            if(tmp!=0){
-                G[i].push_back(tmp);
-                TSPdistanceMAX+=tmp;
-            }
-            else{
-                G[i].push_back(1e15);
-                TSPdistanceMAX+=1e15;
-            }
+            G[i].push_back(tmp);
+            TSPdistanceMAX+=tmp;
         }
     }
 }
@@ -191,10 +185,7 @@ int main()
 			cout << MIN0 << endl;
         }
         auto t2=clock();
-        if(MIN0<=1e12)
-            cout << "cost: " << MIN0 << endl;
-        else
-            cout << "cost: 0\n";
+        cout << "cost: " << MIN0 << endl;
         cout << "TIME: " << (t2-t1)/(double)CLOCKS_PER_SEC << endl <<  "Travel route: ";
 		/*
         for(int i=0;i<n;++i)

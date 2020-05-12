@@ -20,10 +20,7 @@ void dfs(int now,ll COST,int node,int start)	//遞迴路徑的函數，有分個
 		return;
 	if(node==0){	//若已走過每個城市一次，執行以下
 
-		if(E[now][start-1]!=0)	//判斷最後能不能走回起點
-			COST+=E[now][start-1];
-		else
-			return;	//找不到回起點的路，所以重新找路，跳出該層遞迴
+		COST+=E[now][start-1];
 
 		if(COST<ans){	//找到路徑，比較當前路徑的花費與當前找到的最小值
 			ans=COST;
@@ -37,8 +34,6 @@ void dfs(int now,ll COST,int node,int start)	//遞迴路徑的函數，有分個
 	int next;	//存放下一個節點
 	for(int i=0;i<n;++i){	//窮舉下一個點
 		next=i+1;
-		if(E[now][i]==0)	//若連線邊不存在
-			continue;
 		if(!visit[next]){	//確定是沒走過的點
 			temporaryRoute[node-1]=next;	//紀錄遞迴路徑
 			visit[next]=true;	//標記next已經走到了

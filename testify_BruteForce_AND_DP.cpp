@@ -19,7 +19,7 @@ void solve()
 	random_device rd;
     auto tt = chrono::high_resolution_clock::now();
     std::mt19937_64 gen = std::mt19937_64(tt.time_since_epoch().count());
-    std::uniform_int_distribution<> dis(-1000 , 10000);	// 約1/11的機率沒有邊
+    std::uniform_int_distribution<> dis(0 , 10000);
     auto randfunction = bind(dis , gen);
 	//設定隨機數生成器end
 
