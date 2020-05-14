@@ -44,18 +44,14 @@ void solve()
 
 void output()
 {
-	int ans=1000000000,bestStart;
-	for(int start=0;start<n;++start){	//窮舉起始點
-		memset(dp,0x3f,sizeof(dp));
-		dp[start][(ll)1<<start]=0;
-		solve();
-		for(int FROM=0;FROM<n;++FROM){	//窮舉由那一個點連回起始點會有最佳結果
-			if(G[FROM][start]!=0 && dp[FROM][((ll)1<<(n))-1]+G[FROM][start]<ans){
-				ans=dp[FROM][((ll)1<<(n))-1]+G[FROM][start];	
-				bestStart=start;
-			}
-		}
-	}
+	int ans=1000000000,bestStart,start=0;
+
+	memset(dp,0x3f,sizeof(dp));
+	dp[start][(ll)1<<start]=0;
+	solve();
+
+	for(int FROM=0;FROM<n;++FROM)	//窮舉由那一個點連回起始點會有最佳結果
+			ans=min(ans,dp[FROM][((ll)1<<(n))-1]+G[FROM][start]);	
 
 	cout << "cost: " << ans << endl;	//輸出值
 }
