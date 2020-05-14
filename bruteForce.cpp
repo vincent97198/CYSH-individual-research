@@ -65,12 +65,10 @@ void input()	//輸入資料
 
 void solve()	//calculate the answer
 {
-	for(int start=1;start<=n;++start){
-		temporaryRoute[n-1]=start;	//紀錄起點
-		visit[start]=true;	//標記起點已走過
-		dfs(start,0,n-1,start);	//計算以start為起點的最短迴路
-		visit[start]=false;
-	}
+	int start=1;
+	temporaryRoute[n-1]=start;	//紀錄起點
+	visit[start]=true;	//標記起點已走過
+	dfs(start,0,n-1,start);	//計算以start為起點的最短迴路
 	if(ans!=((ll)1<<61)){		//判斷路徑是否存在
 		cout << "cost: " << ans << endl;	//輸出答案
 		cout << "route: ";
