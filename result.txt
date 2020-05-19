@@ -1,23 +1,2 @@
-Average deviation: 0.00000%
-Standard deviation: 0.00000
-Average Time: 9.57303 seconds
-MAX deviation:0.00000%
-min deviation: 0.00000%
-MAX TIME: 10.21170 seconds
-min TIME: 8.85450 seconds
-
-Case: 1
-GA_Ans: 933   TIME: 10.21170
-DP_Ans: 933
-deviation: 0.00000%
-
-Case: 2
-GA_Ans: 1314   TIME: 8.85450
-DP_Ans: 1314
-deviation: 0.00000%
-
-Case: 3
-GA_Ans: 753   TIME: 9.65290
-DP_Ans: 753
-deviation: 0.00000%
-
+Wrong
+wrong line: 0
